@@ -1,0 +1,73 @@
+{"properties": [
+  {
+    "name": "quartz.enabled",
+    "type": "java.lang.Boolean",
+    "description": "if auto configuration is enabled",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.persistence.persisted",
+    "type": "java.lang.Boolean",
+    "description": "should be set to true if quartz is configured to persist its data to a database",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.persistence.usePlatformTxManager",
+    "type": "java.lang.Boolean",
+    "description": "Only if quartz.persisted=true. if the PlatformTransactionManager should be used. Must be configured as Bean.",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.persistence.dataSourceName",
+    "type": "java.lang.String",
+    "description": "Only if quartz.persisted=true. If more than one database connection is configured the name (case-sensitive) of the used DataSource must be configured",
+    "defaultValue": ""
+  },{
+    "name": "quartz.schedulerFactory.schedulerName",
+    "type": "java.lang.String",
+    "description": "Optional: a name for the scheduler",
+    "defaultValue": ""
+  },{
+    "name": "quartz.schedulerFactory.autoStartup",
+    "type": "java.lang.Boolean",
+    "description": "Set whether to automatically start the scheduler after initialization. ",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.schedulerFactory.waitForJobsToCompleteOnShutdown",
+    "type": "java.lang.Boolean",
+    "description": "Set whether to wait for running jobs to complete on shutdown.",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.schedulerFactory.overwriteExistingJobs",
+    "type": "java.lang.Boolean",
+    "description": "Set whether any jobs defined on this SchedulerFactoryBean should overwrite existing job definitions. ",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.schedulerFactory.exposeSchedulerInRepository",
+    "type": "java.lang.Boolean",
+    "description": "Set whether to expose the Spring-managed Scheduler instance in the Quartz SchedulerRepository.",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.schedulerFactory.phase",
+    "type": "java.lang.Integer",
+    "description": "Specify the phase in which this scheduler should be started and stopped. The startup order proceeds from lowest to highest, and the shutdown order is the reverse of that.",
+    "defaultValue": "java.lang.Integer.MAX_VALUE"
+  },{
+    "name": "quartz.schedulerFactory.startupDelay",
+    "type": "java.lang.Integer",
+    "description": "Set the number of seconds to wait after initialization before starting the scheduler asynchronously. Default is 0, meaning immediate synchronous startup on initialization of this bean. ",
+    "defaultValue": "0"
+  },{
+    "name": "quartz.propertiesConfigLocation",
+    "type": "java.lang.String",
+    "description": "Optional: a different resource location for quartz internal properties. (http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)",
+    "defaultValue": "classpath:/org/quartz/quartz.properties"
+  },{
+    "name": "quartz.properties",
+    "type": "java.util.Map",
+    "description": "Optional: option to manage quartz internal properties via spring application properties. (http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)",
+    "defaultValue": ""
+  },{
+    "name": "quartz.overrideConfigLocationProperties",
+    "type": "java.lang.Boolean",
+    "description": "If true, the properties from spring application will override the esisting quartz properties from quartz.propertiesConfigLocation",
+    "defaultValue": "true"
+  }
+]}
