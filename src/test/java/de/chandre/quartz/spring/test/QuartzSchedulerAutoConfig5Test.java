@@ -14,17 +14,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import de.chandre.quartz.context.TestContextConfiguration3;
-import de.chandre.quartz.spring.QuartzSchedulerProperties;
+import de.chandre.quartz.context.StaticLog;
+import de.chandre.quartz.context.TestContextConfiguration5;
 import de.chandre.quartz.spring.app.TestApplication;
 
+/**
+ * 
+ * @author André Hertwig
+ * @since 1.0.1
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=TestApplication.class)
-@ContextConfiguration(classes= TestContextConfiguration3.class)
+@ContextConfiguration(classes= TestContextConfiguration5.class)
 @TestPropertySource(properties = {
 		"quartz.enabled=true", 
-		"quartz.persistence.persisted=true",
-		"quartz.persistence.use-platform-tx-manager=true",
+		"quartz.persistence.persisted=false",
+		"quartz.override-config-location-properties=false",
 		"quartz.propertiesConfigLocation=classpath:differentQuartzScheduler.properties",
 		"flyway.enabled=true",
 		"flyway.locations=classpath:db/migration/h2",
@@ -35,9 +40,11 @@ import de.chandre.quartz.spring.app.TestApplication;
 		"spring.datasource.driver-class-name=org.h2.Driver",
 		"spring.jpa.hibernate.ddl-auto=validate",
 		"spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"})
+		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
+		"logging.level.=error",
+		"spring.main.banner-mode=off"})
 //@DirtiesContext
-public class QuartzSchedulerAutoConfig3Test {
+public class QuartzSchedulerAutoConfig5Test {
 	
 	@Autowired
 	private Scheduler scheduler;
@@ -45,18 +52,13 @@ public class QuartzSchedulerAutoConfig3Test {
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
 	
-	@Autowired
-	private QuartzSchedulerProperties props;
-	
 	@Test
-	public void startEnvironment_test3() throws SchedulerException {
+	public void startEnvironment_test5() throws SchedulerException {
 		assertNotNull(scheduler);
 		assertNotNull(schedulerFactory);
 		
-		assertThat(scheduler.getSchedulerInstanceId()).isEqualTo("OverriddenQuartzSchedulerTestId");
+		assertThat(scheduler.getSchedulerInstanceId()).isEqualTo("QuartzSchedulerTestId");
 		
-		assertThat(props.toString()).contains("persisted=true", "usePlatformTxManager=true");
-		
+		assertThat(StaticLog.getInstance().getMessasge()).contains(TestContextConfiguration5.CAPTURE);
 	}
-
 }

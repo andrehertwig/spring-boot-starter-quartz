@@ -14,19 +14,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import de.chandre.quartz.context.TestContextConfiguration3;
-import de.chandre.quartz.spring.QuartzSchedulerProperties;
+import de.chandre.quartz.context.TestContextConfiguration7;
 import de.chandre.quartz.spring.app.TestApplication;
 
+/**
+ * 
+ * @author André Hertwig
+ * @since 1.0.1
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=TestApplication.class)
-@ContextConfiguration(classes= TestContextConfiguration3.class)
+@ContextConfiguration(classes= TestContextConfiguration7.class)
 @TestPropertySource(properties = {
 		"quartz.enabled=true", 
 		"quartz.persistence.persisted=true",
-		"quartz.persistence.use-platform-tx-manager=true",
-		"quartz.propertiesConfigLocation=classpath:differentQuartzScheduler.properties",
-		"flyway.enabled=true",
+		"quartz.persistence.data-source-name=otherDataSource",
+		"quartz.propertiesConfigLocation=classpath:overriddenQuartzScheduler.properties",
+		"flyway.enabled=false",
 		"flyway.locations=classpath:db/migration/h2",
 		"spring.datasource.initialize=true",
 		"spring.datasource.url=jdbc:h2:mem:datajpa;MODE=Oracle",
@@ -37,7 +41,7 @@ import de.chandre.quartz.spring.app.TestApplication;
 		"spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
 		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"})
 //@DirtiesContext
-public class QuartzSchedulerAutoConfig3Test {
+public class QuartzSchedulerAutoConfig7Test {
 	
 	@Autowired
 	private Scheduler scheduler;
@@ -45,18 +49,12 @@ public class QuartzSchedulerAutoConfig3Test {
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
 	
-	@Autowired
-	private QuartzSchedulerProperties props;
-	
 	@Test
-	public void startEnvironment_test3() throws SchedulerException {
+	public void startEnvironment_test7() throws SchedulerException {
 		assertNotNull(scheduler);
 		assertNotNull(schedulerFactory);
 		
 		assertThat(scheduler.getSchedulerInstanceId()).isEqualTo("OverriddenQuartzSchedulerTestId");
-		
-		assertThat(props.toString()).contains("persisted=true", "usePlatformTxManager=true");
-		
 	}
 
 }
