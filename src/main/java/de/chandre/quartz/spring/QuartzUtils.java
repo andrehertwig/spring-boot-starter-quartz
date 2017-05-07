@@ -164,7 +164,7 @@ public class QuartzUtils {
 	public static JobDetailFactoryBean createJobDetail(Class<?> jobClass, String jobName, String jobGroup, 
 			String jobDdescription, Map<String, ?> jobData) {
 		return QuartzUtils.jobBuilder().jobClass(jobClass).name(jobName).group(jobGroup).description(jobDdescription)
-				.putJobData(jobData).getJobDetailFactoryBean();
+				.putJobData(jobData).durability(true).getJobDetailFactoryBean();
 	}
 	
 	/**
@@ -357,7 +357,11 @@ public class QuartzUtils {
 	}
 	
 	/**
+	 * creates a SimpleTriggerFactoryBean regarding the parameters with {@link SimpleTrigger#REPEAT_INDEFINITELY} and
+	 * {@link SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT}
 	 * 
+	 * @see QuartzUtils#createSimpleTrigger(JobDetail, String, String, String, long, long, int, int, Map, int)
+	 *  
 	 * @param jobDetail
 	 * @param triggerName (optional)
 	 * @param triggerGroup (optional)
@@ -595,6 +599,8 @@ public class QuartzUtils {
 	}
 	
 	/**
+	 * creates a CronTriggerFactoryBean regarding the parameters with {@link CronTrigger#MISFIRE_INSTRUCTION_DO_NOTHING}
+	 * @see QuartzUtils#createCronTrigger(JobDetail, String, String, String, String, int, Map, long, Date, String, int)
 	 * 
 	 * @param jobDetail
 	 * @param triggerName (optional)
@@ -616,7 +622,6 @@ public class QuartzUtils {
 	
 	/**
 	 * returns a cron trigger factory bean to put into spring context
-	 * 
 	 *
 	 * @param jobDetail
 	 * @param triggerName (optional)
