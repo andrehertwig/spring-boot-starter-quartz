@@ -23,7 +23,7 @@ Tested with Spring Boot 1.3.8, 1.4.6, 1.5.3
 	<dependency>
 		<groupId>de.chandre.quartz</groupId>
 		<artifactId>spring-boot-starter-quartz</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 	
 ```
@@ -37,3 +37,5 @@ For special configuration, please check the [additional-spring-configuration-met
 Check `de.chandre.quartz.spring.QuartzUtils` for Builders for JobDetail, SimpleTrigger and CronTrigger
 
 If you want to add scheduler properties at runtime while application start-up, you are able to do that by implementing the `de.chandre.quartz.spring.QuartzPropertiesOverrideHook` (Maybe if your Configuration is stored in a database, or you want to change the Quartz table prefix with Hibernate's common table prefix).
+
+If you want to customize the SchedulerFactory, e.g. to set own task executor, you are able to do that by implementing the `de.chandre.quartz.spring.QuartzSchedulerFactoryOverrideHook`
