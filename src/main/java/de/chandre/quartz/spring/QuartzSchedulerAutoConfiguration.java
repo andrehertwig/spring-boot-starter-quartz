@@ -95,6 +95,12 @@ public class QuartzSchedulerAutoConfiguration {
         } else {
         	LOGGER.info("staring scheduler factory with 0 job triggers");
         }
+        
+        QuartzSchedulerFactoryOverrideHook hook = getQuartzSchedulerFactoryOverrideHook(applicationContext);
+        if (null != hook) {
+        	factory = hook.override(factory, properties, quartzProperties);
+        }
+        
 		return factory;
 	}
 	
@@ -126,6 +132,16 @@ public class QuartzSchedulerAutoConfiguration {
 	    			"No DS found in map with size: " + dsSize + ", and configured DSName: " + persistenceSettings.getDataSourceName());
 	    }
 	    return dataSource;
+	}
+	
+	private QuartzSchedulerFactoryOverrideHook getQuartzSchedulerFactoryOverrideHook(ApplicationContext applicationContext) {
+		try {
+			return applicationContext.getBean(QuartzSchedulerFactoryOverrideHook.class);
+		} catch (Exception e) {
+			LOGGER.info("no QuartzSchedulerFactoryOverrideHook configured");
+			LOGGER.debug(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	@Bean(name = QUARTZ_PROPERTIES_BEAN_NAME)

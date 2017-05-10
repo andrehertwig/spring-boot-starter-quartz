@@ -1,8 +1,15 @@
 package de.chandre.quartz.context;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Simple message appender to unit tests
+ * @author André Hertwig
+ */
 public class StaticLog {
 	private static StaticLog LOG = new StaticLog();
-	private String messasge;
+	private List<String> messasges = new ArrayList<>();
 
 	private StaticLog() {
 		super();
@@ -13,15 +20,15 @@ public class StaticLog {
 		return LOG;
 	}
 
-	public String getMessasge() {
-		return messasge;
+	public List<String> getMessasges() {
+		return messasges;
 	}
 
-	public void setMessasge(String messasge) {
-		this.messasge = messasge;
+	public void addMessasge(String messasge) {
+		this.messasges.add(messasge);
 	}
 
 	public void clear() {
-		this.messasge = null;
+		this.messasges.clear();;
 	}
 }

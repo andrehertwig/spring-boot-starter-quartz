@@ -59,6 +59,7 @@ public class QuartzSchedulerAutoConfig5Test {
 		
 		assertThat(scheduler.getSchedulerInstanceId()).isEqualTo("QuartzSchedulerTestId");
 		
-		assertThat(StaticLog.getInstance().getMessasge()).contains(TestContextConfiguration5.CAPTURE);
+		assertThat(StaticLog.getInstance().getMessasges()).containsExactlyInAnyOrder(
+				TestContextConfiguration5.CAPTURE1,TestContextConfiguration5.CAPTURE2 );
 	}
 }
