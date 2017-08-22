@@ -28,11 +28,11 @@ Tested with Spring Boot 1.3.8, 1.4.6, 1.5.3, 1.5.6
 
 ```xml
 
-	<dependency>
-		<groupId>de.chandre.quartz</groupId>
-		<artifactId>spring-boot-starter-quartz</artifactId>
-		<version>1.0.1</version>
-	</dependency>
+<dependency>
+	<groupId>de.chandre.quartz</groupId>
+	<artifactId>spring-boot-starter-quartz</artifactId>
+	<version>1.0.1</version>
+</dependency>
 	
 ```
 
