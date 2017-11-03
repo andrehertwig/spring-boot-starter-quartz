@@ -30,7 +30,7 @@ import de.chandre.quartz.spring.app.TestApplication;
 		"quartz.enabled=true", 
 		"quartz.persistence.persisted=false",
 		"quartz.override-config-location-properties=false",
-		"quartz.propertiesConfigLocation=classpath:differentQuartzScheduler.properties",
+		"quartz.properties-config-location=classpath:differentQuartzScheduler.properties",
 		"quartz.properties.org.quartz.scheduler.instanceId=OnlyAppPropertyTestId",
 		"quartz.scheduler-factory.scheduler-name=MySpecialScheduler",
 		"quartz.scheduler-factory.auto-startup=false",

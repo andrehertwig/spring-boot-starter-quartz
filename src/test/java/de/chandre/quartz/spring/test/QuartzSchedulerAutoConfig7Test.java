@@ -29,7 +29,7 @@ import de.chandre.quartz.spring.app.TestApplication;
 		"quartz.enabled=true", 
 		"quartz.persistence.persisted=true",
 		"quartz.persistence.data-source-name=otherDataSource",
-		"quartz.propertiesConfigLocation=classpath:overriddenQuartzScheduler.properties",
+		"quartz.properties-config-location=classpath:overriddenQuartzScheduler.properties",
 		"flyway.enabled=false",
 		"flyway.locations=classpath:db/migration/h2",
 		"spring.datasource.initialize=true",

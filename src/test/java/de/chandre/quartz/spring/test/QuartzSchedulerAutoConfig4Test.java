@@ -23,7 +23,7 @@ import de.chandre.quartz.spring.app.TestApplication;
 @TestPropertySource(properties = {
 		"quartz.enabled=true", 
 		"quartz.persistence.persisted=false",
-		"quartz.propertiesConfigLocation=classpath:differentQuartzScheduler.properties",
+		"quartz.properties-config-location=classpath:differentQuartzScheduler.properties",
 		"flyway.enabled=true",
 		"flyway.locations=classpath:db/migration/h2",
 		"spring.datasource.initialize=true",

@@ -139,7 +139,7 @@ public class QuartzSchedulerAutoConfiguration {
 			return applicationContext.getBean(QuartzSchedulerFactoryOverrideHook.class);
 		} catch (Exception e) {
 			LOGGER.info("no QuartzSchedulerFactoryOverrideHook configured");
-			LOGGER.debug(e.getMessage(), e);
+			LOGGER.trace(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -169,10 +169,10 @@ public class QuartzSchedulerAutoConfiguration {
 			quartzProperties = hook.override(quartzProperties);
 		}
 
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Quartz-Properties");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Quartz-Properties");
 			quartzProperties.entrySet().forEach(entry -> {
-				LOGGER.trace("    " + entry.getKey() + " = " + entry.getValue());
+				LOGGER.debug("    " + entry.getKey() + " = " + entry.getValue());
 			});
 		}
 
@@ -206,7 +206,7 @@ public class QuartzSchedulerAutoConfiguration {
 			return applicationContext.getBean(QuartzPropertiesOverrideHook.class);
 		} catch (Exception e) {
 			LOGGER.info("no QuartzPropertiesOverrideHook configured");
-			LOGGER.debug(e.getMessage(), e);
+			LOGGER.trace(e.getMessage(), e);
 		}
 		return null;
 	}
