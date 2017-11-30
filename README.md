@@ -36,6 +36,17 @@ Tested with Spring Boot 1.3.8, 1.4.6, 1.5.3, 1.5.6
 	
 ```
 
+Maybe you have to explicitly enable the component scan for the package:
+```java
+
+@SpringBootApplication
+@EnableAutoConfiguration
+@ComponentScan(basePackages={"your.packages", "de.chandre.quartz.spring"})
+public class MyBootApplication {
+ 
+}
+```
+
 ## Configuration Properties
 
 For special configuration, please check the [additional-spring-configuration-metadata.json](src/main/resources/META-INF/additional-spring-configuration-metadata.json) 
