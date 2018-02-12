@@ -13,6 +13,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import de.chandre.quartz.spring.QuartzSchedulerAutoConfiguration;
 import de.chandre.quartz.spring.app.TestApplication;
 
 @RunWith(SpringRunner.class)
@@ -42,6 +43,8 @@ public class QuartzSchedulerAutoConfig1Test {
 	public void startEnvironment_test() throws SchedulerException {
 		assertNotNull(scheduler);
 		assertNotNull(schedulerFactory);
+		
+		assertThat(	scheduler.getSchedulerName()).isEqualTo(QuartzSchedulerAutoConfiguration.QUARTZ_SCHEDULER_FACTORY_BEAN_NAME);
 		
 		assertThat(scheduler.getSchedulerInstanceId()).isEqualTo("MyTestInstanceId");
 	}

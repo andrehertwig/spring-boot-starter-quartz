@@ -22,7 +22,9 @@ This is just a spare-time project. The usage of this tool (especially in product
 * spring-boot
 * quatz-scheduler
 
-Tested with Spring Boot 1.3.8, 1.4.6, 1.5.3, 1.5.6
+Tested with Spring Boot 
+* (1.0.2) 1.3.8, 1.4.6, 1.5.3, 1.5.6, 
+* (1.0.3) 1.5.10
 
 ## Usage
 
@@ -31,7 +33,7 @@ Tested with Spring Boot 1.3.8, 1.4.6, 1.5.3, 1.5.6
 <dependency>
 	<groupId>de.chandre.quartz</groupId>
 	<artifactId>spring-boot-starter-quartz</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 </dependency>
 	
 ```
@@ -69,6 +71,8 @@ public class SchedulerConfig
 	private static final Logger LOGGER = LogManager.getFormatterLogger(SchedulerConfig.class);
 	
 	private static final String QRTZ_TABLE_PREFIX_KEY = "org.quartz.jobStore.tablePrefix";
+	
+	private static final String QRTZ_JOB_CLASS = "org.quartz.jobStore.class";
 
 	@Bean
 	public QuartzPropertiesOverrideHook quartzPropertiesOverrideHook() {
@@ -76,9 +80,12 @@ public class SchedulerConfig
 
 			@Override
 			public Properties override(Properties quartzProperties) {
-				String qrtzPrefix = (String) quartzProperties.get(QRTZ_TABLE_PREFIX_KEY);
-				LOGGER.info("setting %s to %s", QRTZ_TABLE_PREFIX_KEY, MyCustomNamingStrategy.getPrefix() + qrtzPrefix);
-				quartzProperties.put(QRTZ_TABLE_PREFIX_KEY, MyCustomNamingStrategy.getPrefix() + qrtzPrefix);
+				String jobclazz = (String) quartzProperties.get(QRTZ_JOB_CLASS);
+				if (!jobclazz.contains("RAMJobStore")) {
+					String qrtzPrefix = (String) quartzProperties.get(QRTZ_TABLE_PREFIX_KEY);
+					LOGGER.info("setting %s to %s", QRTZ_TABLE_PREFIX_KEY, MyCustomNamingStrategy.getPrefix() + qrtzPrefix);
+					quartzProperties.put(QRTZ_TABLE_PREFIX_KEY, MyCustomNamingStrategy.getPrefix() + qrtzPrefix);
+				}
 				return quartzProperties;
 			}
 		};

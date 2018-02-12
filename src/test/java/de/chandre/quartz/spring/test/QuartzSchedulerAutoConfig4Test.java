@@ -10,6 +10,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -34,7 +35,7 @@ import de.chandre.quartz.spring.app.TestApplication;
 		"spring.jpa.hibernate.ddl-auto=validate",
 		"spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
 		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"})
-//@DirtiesContext
+@DirtiesContext
 public class QuartzSchedulerAutoConfig4Test {
 	
 	@Autowired
