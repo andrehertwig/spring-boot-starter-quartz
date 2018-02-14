@@ -31,9 +31,14 @@
     "description": "Only if quartz.persisted=true. if the PlatformTransactionManager should be used. Must be configured as Bean.",
     "defaultValue": "true"
   },{
+    "name": "quartz.persistence.platform-tx-manager-bean-name",
+    "type": "java.lang.String",
+    "description": "Only if quartz.persisted=true. if there are more than one PlatformTransactionManagers within the context you can specify the bean name, which txManager to use.",
+    "defaultValue": "true"
+  },{
     "name": "quartz.persistence.data-source-name",
     "type": "java.lang.String",
-    "description": "Only if quartz.persisted=true. If more than one database connection is configured the name (case-sensitive) of the used DataSource must be configured",
+    "description": "Only if quartz.persisted=true. If more than one database connection is configured the name (case-sensitive) of the used DataSource must be configured.",
     "defaultValue": ""
   },{
     "name": "quartz.scheduler-factory.schedulerName",

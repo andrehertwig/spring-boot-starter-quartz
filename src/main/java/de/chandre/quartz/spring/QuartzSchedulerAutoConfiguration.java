@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.util.StringUtils;
 
 import de.chandre.quartz.spring.QuartzSchedulerProperties.Persistence;
 import de.chandre.quartz.spring.QuartzSchedulerProperties.SchedulerFactory;
@@ -60,8 +61,30 @@ public class QuartzSchedulerAutoConfiguration {
 			return null;
 		}
 		
-		private static PlatformTransactionManager getTransactionManager(ApplicationContext applicationContext) {
-			return applicationContext.getBean(PlatformTransactionManager.class);
+		private static PlatformTransactionManager getTransactionManager(ApplicationContext applicationContext, String txManagerBeanName) {
+			Map<String, PlatformTransactionManager> txManagers = applicationContext.getBeansOfType(PlatformTransactionManager.class);
+			if (null != txManagers && txManagers.size() > 0) {
+				if (txManagers.size() == 1) {
+					LOGGER.debug("only one txManager found, returning: " + txManagers.keySet().iterator().next());
+					return txManagers.values().iterator().next();
+				} else if (!StringUtils.isEmpty(txManagerBeanName)) {
+					LOGGER.debug("more than one txManager found, try using: " + txManagerBeanName);
+					PlatformTransactionManager txManager = txManagers.get(txManagerBeanName);
+					if (null == txManager) {
+						LOGGER.warn("QuartzSchedulerAutoConfiguration is configured to use " + txManagerBeanName 
+								+ " as PlatformTransactionManager, but no bean for this name has been found in context!");
+					}
+					return txManager;
+				} else {
+					LOGGER.warn("QuartzSchedulerAutoConfiguration is configured to use PlatformTransactionManager, "
+							+ "but more than one has been found in context! "
+							+ "Consider using quartz.persistence.platform-tx-manager-bean-name in pallication configuration.");
+				}
+			} else {
+				LOGGER.warn("QuartzSchedulerAutoConfiguration is configured to use PlatformTransactionManager, "
+						+ "but no bean of this type has been found in context!");
+			}
+			return null;
 		}
 		
 		private static DataSource getDataSource(ApplicationContext applicationContext, Persistence persistenceSettings) {
@@ -209,7 +232,7 @@ public class QuartzSchedulerAutoConfiguration {
 	        if (persistenceSettings.isPersisted()) {
 	        	factory.setDataSource(getDataSource(applicationContext, persistenceSettings));
 	        	if (persistenceSettings.isUsePlatformTxManager()) {
-	        		PlatformTransactionManager txManager = getTransactionManager(applicationContext);
+	        		PlatformTransactionManager txManager = getTransactionManager(applicationContext, persistenceSettings.getPlatformTxManagerBeanName());
 	            	if (null != txManager) {
 	                	factory.setTransactionManager(txManager);
 	                }

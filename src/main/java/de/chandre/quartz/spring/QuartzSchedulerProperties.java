@@ -72,6 +72,7 @@ public class QuartzSchedulerProperties {
 		
 		private boolean persisted = false;
 		private boolean usePlatformTxManager = true;
+		private String platformTxManagerBeanName; 
 		private String dataSourceName;
 		
 		public boolean isPersisted() {
@@ -88,6 +89,14 @@ public class QuartzSchedulerProperties {
 
 		public void setUsePlatformTxManager(boolean usePlatformTxManager) {
 			this.usePlatformTxManager = usePlatformTxManager;
+		}
+
+		public String getPlatformTxManagerBeanName() {
+			return platformTxManagerBeanName;
+		}
+
+		public void setPlatformTxManagerBeanName(String platformTxManagerBeanName) {
+			this.platformTxManagerBeanName = platformTxManagerBeanName;
 		}
 
 		public String getDataSourceName() {
