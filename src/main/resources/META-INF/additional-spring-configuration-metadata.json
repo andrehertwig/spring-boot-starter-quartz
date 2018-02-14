@@ -88,7 +88,7 @@
   },{
     "name": "quartz.override-config-location-properties",
     "type": "java.lang.Boolean",
-    "description": "If true, the properties from spring application will override the esisting quartz properties from quartz.propertiesConfigLocation",
+    "description": "If true, the properties from spring application will override the exsisting quartz properties from quartz.properties-config-location. If false only Springs quartz.properties.* will be used with fallback to file if empty.",
     "defaultValue": "true"
   }
 ]}

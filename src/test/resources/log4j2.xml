@@ -21,10 +21,13 @@
 		<Logger name="org.springframework.core" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
+		<Logger name="org.springframework.scheduling" level="debug" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
 		<Logger name="org.quartz" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
-		<Root level="info">
+		<Root level="debug">
 			<AppenderRef ref="Console"/>
 		</Root>
 	</Loggers>
