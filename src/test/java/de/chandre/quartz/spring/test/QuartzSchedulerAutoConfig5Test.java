@@ -3,6 +3,7 @@ package de.chandre.quartz.spring.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.Scheduler;
@@ -52,6 +53,11 @@ public class QuartzSchedulerAutoConfig5Test {
 	
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
+	
+	@BeforeClass
+	public static void clear() {
+		StaticLog.getInstance().clear();
+	}
 	
 	@Test
 	public void startEnvironment_test5() throws SchedulerException {
