@@ -53,6 +53,80 @@ public class MyBootApplication {
 
 For special configuration, please check the [additional-spring-configuration-metadata.json](src/main/resources/META-INF/additional-spring-configuration-metadata.json) 
 
+[Quartz 2.x Configuration](http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)
+
+```ini
+  # if auto configuration is enabled
+  quartz.enabled=true
+  
+  ################################
+  #      Quartz Persistence      #
+  ################################
+  
+  # should be set to true if quartz is configured to persist its data to a database
+  quartz.persistence.persisted=false
+  
+  # Only if quartz.persisted=true. if the PlatformTransactionManager should be used. Must be configured as Bean.
+  quartz.persistence.use-platform-tx-manager=true
+  
+  #since 1.0.4
+  #String
+  #Only if quartz.persisted=true. if there are more than one PlatformTransactionManagers 
+  # within the context you can specify the bean name, which txManager to use.
+  quartz.persistence.platform-tx-manager-bean-name=
+  
+  #String
+  # Only if quartz.persisted=true. If more than one database connection is configured the 
+  # name (case-sensitive) of the used DataSource must be configured.
+  quartz.persistence.data-source-name=
+  
+  ################################
+  #   Quartz SchedulerFactory    #
+  ################################
+  
+  #String
+  # Optional: a name for the scheduler
+  quartz.scheduler-factory.schedulerName=
+  
+  # Set whether to automatically start the scheduler after initialization.
+  quartz.scheduler-factory.auto-startup=true
+  
+  # Set whether to wait for running jobs to complete on shutdown.
+  quartz.scheduler-factory.wait-for-jobs-to-complete-on-shutdown=false
+  
+  # Set whether any jobs defined on this scheduler-factoryBean should overwrite existing job definitions.
+  quartz.scheduler-factory.overwrite-existing-jobs=false
+  
+  # Set whether to expose the Spring-managed Scheduler instance in the Quartz SchedulerRepository.
+  quartz.scheduler-factory.expose-scheduler-in-repository=false
+  
+  # Specify the phase in which this scheduler should be started and stopped. 
+  # The startup order proceeds from lowest to highest, and the shutdown order is the reverse of that.
+  quartz.scheduler-factory.phase=java.lang.Integer.MAX_VALUE
+  
+  # Set the number of seconds to wait after initialization before starting the scheduler asynchronously.
+  # Default is 0, meaning immediate synchronous startup on initialization of this bean.
+  quartz.scheduler-factory.startup-delay=0
+  
+  ################################
+  #      Quartz Properties       #
+  ################################
+  
+  # Optional: a different resource location for quartz internal properties. 
+  # (http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)
+  quartz.properties-config-location=classpath:/org/quartz/quartz.properties
+  
+  # Optional: option to manage quartz internal properties via spring application properties. 
+  # (http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)
+  quartz.properties.*
+  
+  # If true, the properties from spring application will override the exsisting 
+  # quartz properties from quartz.properties-config-location.
+  # If false only Springs quartz.properties.* will be used with fallback to file if empty.
+  quartz.override-config-location-properties=true
+
+```
+
 ## Additional Things
 
 Check `de.chandre.quartz.spring.QuartzUtils` for Builders for JobDetail, SimpleTrigger and CronTrigger
