@@ -20,11 +20,11 @@ This is just a spare-time project. The usage of this tool (especially in product
 
 ## Requirements, Dependencies
 * spring-boot
-* quatz-scheduler
+* quartz-scheduler
 
 Tested with Spring Boot 
-* (1.0.2) 1.3.8, 1.4.6, 1.5.3, 1.5.6, 
-* (1.0.3) 1.5.10
+* (until 1.0.2) 1.3.8, 1.4.6, 1.5.3, 1.5.6, 
+* (since 1.0.3) 1.4.6, 1.5.10
 
 ## Usage
 
@@ -168,10 +168,12 @@ public class SchedulerConfig
 	@Bean
 	public QuartzSchedulerFactoryOverrideHook quartzSchedulerFactoryOverrideHook() {
 		return new QuartzSchedulerFactoryOverrideHook() {
-			
+		
 			@Override
 			public SchedulerFactoryBean override(SchedulerFactoryBean factory, QuartzSchedulerProperties properties,
 					Properties quartzProperties) {
+					
+				// when doing this you may should not set "quartz.properties.org.quartz.threadPool.class" in properties
 				factory.setTaskExecutor(Executors.newFixedThreadPool(10));
 				return factory;
 			}
@@ -182,7 +184,7 @@ public class SchedulerConfig
 
 ## Recommended Maven Dependency Management
 
-Because Quartz still will have some transitive dependencies you don't want to have in you application, you should consider the following dependency settings.
+Because Quartz still will have some transitive dependencies you may don't want to have in your application, you should consider about the following dependency settings.
 
 ```xml
 <dependency>
