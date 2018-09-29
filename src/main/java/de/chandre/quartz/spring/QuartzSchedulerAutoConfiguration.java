@@ -2,6 +2,7 @@ package de.chandre.quartz.spring;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -9,8 +10,11 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.JobListener;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerListener;
 import org.quartz.Trigger;
+import org.quartz.TriggerListener;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.spi.JobFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,10 +32,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import de.chandre.quartz.spring.QuartzSchedulerProperties.Persistence;
 import de.chandre.quartz.spring.QuartzSchedulerProperties.SchedulerFactory;
+import de.chandre.quartz.spring.listener.TriggerMetricsListener;
 
 /**
  * Spring-Boot auto-configuration for Quartz-Scheduler
@@ -47,6 +54,7 @@ public class QuartzSchedulerAutoConfiguration {
 	public static final String QUARTZ_PROPERTIES_BEAN_NAME = "quartzProperties";
 	public static final String QUARTZ_SCHEDULER_FACTORY_BEAN_NAME = "autoSchedulerFactory";
 	public static final String QUARTZ_JOB_FACTORY_BEAN_NAME = "autoJobFactory";
+	public static final String QUARTZ_SCHEDULER_METRICS_LISTENER_BEAN_NAME = "quartzMetricsListener";
 	
 	@Configuration
 	@ConditionalOnProperty(prefix = QuartzSchedulerProperties.PREFIX, name = "enabled", havingValue="true", matchIfMissing = true)
@@ -205,7 +213,10 @@ public class QuartzSchedulerAutoConfiguration {
 		@ConditionalOnMissingBean
 		public SchedulerFactoryBean autoSchedulerFactory(ApplicationContext applicationContext, JobFactory jobFactory,
 				@Autowired(required=false) QuartzSchedulerProperties properties,
-				@Qualifier(QUARTZ_PROPERTIES_BEAN_NAME) Properties quartzProperties) {
+				@Qualifier(QUARTZ_PROPERTIES_BEAN_NAME) Properties quartzProperties,
+				@Autowired(required=false) List<TriggerListener> triggerListeners,
+				@Autowired(required=false) List<JobListener> jobListeners,
+				@Autowired(required=false) List<SchedulerListener> schedulerListeners) {
 			
 			if (null == properties) {
 				LOGGER.warn("no QuartzSchedulerProperties found, consider to set quartz.enabled=true in properties");
@@ -238,8 +249,12 @@ public class QuartzSchedulerAutoConfiguration {
 	                }
 	        	}
 	        }
-	       
-	        factory.setSchedulerName(factorySettings.getSchedulerName());
+	        
+	        if (!StringUtils.isEmpty(factorySettings.getSchedulerName())) {
+	        	factory.setSchedulerName(factorySettings.getSchedulerName());
+	        } else {
+	        	LOGGER.debug("no SchedulerName configured, using bean name: " + QUARTZ_SCHEDULER_FACTORY_BEAN_NAME);
+	        }
 	        factory.setPhase(factorySettings.getPhase());
 	        factory.setStartupDelay(factorySettings.getStartupDelay());
 	        factory.setAutoStartup(factorySettings.isAutoStartup());
@@ -248,6 +263,19 @@ public class QuartzSchedulerAutoConfiguration {
 	        factory.setExposeSchedulerInRepository(factorySettings.isExposeSchedulerInRepository());
 	        
 	        factory.setQuartzProperties(quartzProperties);
+	        
+	        if (!CollectionUtils.isEmpty(jobListeners)) {
+	        	LOGGER.info("configuring " + jobListeners.size() + " job listeners");
+	        	factory.setGlobalJobListeners(jobListeners.toArray(new JobListener[]{}));
+	        }
+	        if (!CollectionUtils.isEmpty(triggerListeners)) {
+	        	LOGGER.info("configuring " + triggerListeners.size() + " trigger listeners");
+	        	factory.setGlobalTriggerListeners(triggerListeners.toArray(new TriggerListener[]{}));
+	        }
+	        if (!CollectionUtils.isEmpty(schedulerListeners)) {
+	        	LOGGER.info("configuring " + schedulerListeners.size() + " scheduler listeners");
+	        	factory.setSchedulerListeners(schedulerListeners.toArray(new SchedulerListener[]{}));
+	        }
 	        
 	        Collection<Trigger> triggers = getTriggers(applicationContext);
 	        if (null != triggers && !triggers.isEmpty()) {
@@ -263,6 +291,25 @@ public class QuartzSchedulerAutoConfiguration {
 	        }
 	        
 			return factory;
+		}
+	}
+	
+	@Configuration
+	@ConditionalOnProperty(prefix = QuartzSchedulerProperties.PREFIX+".metrics", name = "enabled", havingValue="true", matchIfMissing = false)
+	@ConditionalOnMissingBean(name = QUARTZ_SCHEDULER_METRICS_LISTENER_BEAN_NAME)
+	@AutoConfigureBefore(name=QUARTZ_SCHEDULER_FACTORY_BEAN_NAME)
+	protected static class SchedulerMetricsListenerConfiguration {
+		
+		@Bean(name = QUARTZ_SCHEDULER_METRICS_LISTENER_BEAN_NAME)
+		@ConditionalOnMissingBean
+		public TriggerMetricsListener schedulerMetricsListener(@Autowired(required=false) QuartzSchedulerProperties properties) {
+			if (null == properties) {
+				LOGGER.warn("no QuartzSchedulerProperties found, consider to set quartz.enabled=true in properties");
+				return null;
+			}
+			TriggerMetricsListener listener = new TriggerMetricsListener(properties.getMetrics().isEnabled(),
+					properties.getMetrics().getListenerName());
+			return listener;
 		}
 	}
 }

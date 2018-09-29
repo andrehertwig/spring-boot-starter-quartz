@@ -9,6 +9,9 @@
 		<Logger name="de.chandre" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
+		<Logger name="org.hibernate" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
 		<Logger name="org.springframework" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
@@ -24,7 +27,7 @@
 		<Logger name="org.springframework.scheduling" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
-		<Logger name="org.quartz" level="info" additivity="false">
+		<Logger name="org.quartz" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
 		<Root level="debug">

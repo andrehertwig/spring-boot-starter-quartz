@@ -118,7 +118,10 @@ For special configuration, please check the [additional-spring-configuration-met
   
   # Optional: option to manage quartz internal properties via spring application properties. 
   # (http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)
+  # you can also check org.quartz.impl.StdSchedulerFactory for static variables
   quartz.properties.*
+  #example:
+  #quartz.properties.org.quartz.scheduler.rmi.export=true
   
   # If true, the properties from spring application will override the exsisting 
   # quartz properties from quartz.properties-config-location.
@@ -126,6 +129,8 @@ For special configuration, please check the [additional-spring-configuration-met
   quartz.override-config-location-properties=true
 
 ```
+
+The Property `quartz.properties.org.quartz.scheduler.instanceName` is overridden by Spring by default with the SchedulerFactory bean name. To rename it, use `quartz.scheduler-factory.schedulerName`
 
 ## Additional Things
 

@@ -21,6 +21,12 @@ public class QuartzSchedulerProperties {
 	 *  if auto-config is enabled
 	 */
 	private boolean enabled = true;
+	
+	/*
+	 * metric settings
+	 */
+	private Metrics metrics = new Metrics();
+	
 	/*
 	 * persistence settings
 	 */
@@ -52,6 +58,22 @@ public class QuartzSchedulerProperties {
 		this.enabled = enabled;
 	}
 	
+	/**
+	 * metrics settings for spring actuator
+	 * @return
+	 */
+	public Metrics getMetrics() {
+		return metrics;
+	}
+	
+	public void setMetrics(Metrics metrics) {
+		this.metrics = metrics;
+	}
+
+	/**
+	 * persistence settings
+	 * @return
+	 */
 	public Persistence getPersistence() {
 		return persistence;
 	}
@@ -60,12 +82,38 @@ public class QuartzSchedulerProperties {
 		this.persistence = persistence;
 	}
 
+	/**
+	 * scheduler settings
+	 * @return
+	 */
 	public SchedulerFactory getSchedulerFactory() {
 		return schedulerFactory;
 	}
 
 	public void setSchedulerFactory(SchedulerFactory schedulerFactory) {
 		this.schedulerFactory = schedulerFactory;
+	}
+	
+	public static class Metrics {
+		
+		private boolean enabled = false;
+		private String listenerName;
+		
+		public boolean isEnabled() {
+			return enabled;
+		}
+		
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+		
+		public String getListenerName() {
+			return listenerName;
+		}
+		
+		public void setListenerName(String listenerName) {
+			this.listenerName = listenerName;
+		}
 	}
 	
 	public static class Persistence {
@@ -125,7 +173,7 @@ public class QuartzSchedulerProperties {
 		private boolean exposeSchedulerInRepository = false;
 		private int phase = Integer.MAX_VALUE;
 		private int startupDelay = 0;
-		
+
 		public String getSchedulerName() {
 			return schedulerName;
 		}
@@ -185,12 +233,12 @@ public class QuartzSchedulerProperties {
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
-			builder.append("SchedulerFactory [schedulerName=").append(schedulerName).append(", autoStartup=")
-					.append(autoStartup).append(", waitForJobsToCompleteOnShutdown=")
-					.append(waitForJobsToCompleteOnShutdown).append(", overwriteExistingJobs=")
-					.append(overwriteExistingJobs).append(", exposeSchedulerInRepository=")
-					.append(exposeSchedulerInRepository).append(", phase=").append(phase).append(", startupDelay=")
-					.append(startupDelay).append("]");
+			builder.append("SchedulerFactory [schedulerName=")
+					.append(schedulerName).append(", autoStartup=").append(autoStartup)
+					.append(", waitForJobsToCompleteOnShutdown=").append(waitForJobsToCompleteOnShutdown)
+					.append(", overwriteExistingJobs=").append(overwriteExistingJobs)
+					.append(", exposeSchedulerInRepository=").append(exposeSchedulerInRepository).append(", phase=")
+					.append(phase).append(", startupDelay=").append(startupDelay).append("]");
 			return builder.toString();
 		}
 	}
@@ -222,8 +270,8 @@ public class QuartzSchedulerProperties {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("QuartzSchedulerProperties [enabled=").append(enabled).append(", persistence=")
-				.append(persistence).append(", schedulerFactory=").append(schedulerFactory)
+		builder.append("QuartzSchedulerProperties [enabled=").append(enabled).append(", metrics=").append(metrics)
+				.append(", persistence=").append(persistence).append(", schedulerFactory=").append(schedulerFactory)
 				.append(", propertiesConfigLocation=").append(propertiesConfigLocation).append(", properties=")
 				.append(properties).append(", overrideConfigLocationProperties=")
 				.append(overrideConfigLocationProperties).append("]");
