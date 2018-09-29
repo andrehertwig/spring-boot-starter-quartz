@@ -4,6 +4,11 @@
         "type": "de.chandre.quartz.spring.QuartzSchedulerProperties",
         "sourceType": "de.chandre.quartz.spring.QuartzSchedulerProperties"
     },{
+        "name": "quartz.metrics",
+        "type": "de.chandre.quartz.spring.QuartzSchedulerProperties$Metrics",
+        "sourceType": "de.chandre.quartz.spring.QuartzSchedulerProperties",
+        "sourceMethod": "getMetrics()"
+    },{
         "name": "quartz.persistence",
         "type": "de.chandre.quartz.spring.QuartzSchedulerProperties$Persistence",
         "sourceType": "de.chandre.quartz.spring.QuartzSchedulerProperties",
@@ -20,6 +25,16 @@
     "type": "java.lang.Boolean",
     "description": "if auto configuration is enabled",
     "defaultValue": "true"
+  },{
+    "name": "quartz.metrics.enabled",
+    "type": "java.lang.Boolean",
+    "description": "if metrics configuration is enabled",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.metrics.listener-name",
+    "type": "java.lang.String",
+    "description": "Optional: a name for the MetricsListener. If no name provided by configuration the class name will be used.",
+    "defaultValue": ""
   },{
     "name": "quartz.persistence.persisted",
     "type": "java.lang.Boolean",
