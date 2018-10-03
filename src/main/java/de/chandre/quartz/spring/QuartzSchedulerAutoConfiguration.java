@@ -307,7 +307,7 @@ public class QuartzSchedulerAutoConfiguration {
 				LOGGER.warn("no QuartzSchedulerProperties found, consider to set quartz.enabled=true in properties");
 				return null;
 			}
-			TriggerMetricsListener listener = new TriggerMetricsListener(properties.getMetrics().isEnabled(),
+			TriggerMetricsListener listener = new TriggerMetricsListener(properties.getMetrics(),
 					properties.getMetrics().getListenerName());
 			return listener;
 		}

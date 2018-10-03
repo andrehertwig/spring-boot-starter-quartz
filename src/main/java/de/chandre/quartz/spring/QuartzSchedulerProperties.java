@@ -99,6 +99,14 @@ public class QuartzSchedulerProperties {
 		private boolean enabled = false;
 		private String listenerName;
 		
+		private boolean enableJobGroupCounter = false;
+		private boolean enableJobCounter = true;
+		private boolean enableTriggerCounter = true;
+		private boolean enableExecutionInstructionCounter = false;
+		
+		private boolean enableJobGauges = true;
+		private boolean enableTriggerGauges = true;
+		
 		public boolean isEnabled() {
 			return enabled;
 		}
@@ -113,6 +121,54 @@ public class QuartzSchedulerProperties {
 		
 		public void setListenerName(String listenerName) {
 			this.listenerName = listenerName;
+		}
+
+		public boolean isEnableJobGroupCounter() {
+			return enableJobGroupCounter;
+		}
+
+		public void setEnableJobGroupCounter(boolean enableJobGroupCounter) {
+			this.enableJobGroupCounter = enableJobGroupCounter;
+		}
+
+		public boolean isEnableJobCounter() {
+			return enableJobCounter;
+		}
+
+		public void setEnableJobCounter(boolean enableJobCounter) {
+			this.enableJobCounter = enableJobCounter;
+		}
+
+		public boolean isEnableTriggerCounter() {
+			return enableTriggerCounter;
+		}
+
+		public void setEnableTriggerCounter(boolean enableTriggerCounter) {
+			this.enableTriggerCounter = enableTriggerCounter;
+		}
+
+		public boolean isEnableExecutionInstructionCounter() {
+			return enableExecutionInstructionCounter;
+		}
+
+		public void setEnableExecutionInstructionCounter(boolean enableExecutionInstructionCounter) {
+			this.enableExecutionInstructionCounter = enableExecutionInstructionCounter;
+		}
+
+		public boolean isEnableJobGauges() {
+			return enableJobGauges;
+		}
+
+		public void setEnableJobGauges(boolean enableJobGauges) {
+			this.enableJobGauges = enableJobGauges;
+		}
+
+		public boolean isEnableTriggerGauges() {
+			return enableTriggerGauges;
+		}
+
+		public void setEnableTriggerGauges(boolean enableTriggerGauges) {
+			this.enableTriggerGauges = enableTriggerGauges;
 		}
 	}
 	

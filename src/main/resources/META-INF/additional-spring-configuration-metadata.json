@@ -36,6 +36,36 @@
     "description": "Optional: a name for the MetricsListener. If no name provided by configuration the class name will be used.",
     "defaultValue": ""
   },{
+    "name": "quartz.metrics.enable-job-group-counter",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for counting fired job groups is enabled",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.metrics.enable-job-counter",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for counting fired jobs is enabled",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.metrics.enable-trigger-counter",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for counting fired triggers is enabled",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.metrics.enable-execution-instruction-counter",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for final instructions per job/trigger is enabled",
+    "defaultValue": "false"
+  },{
+    "name": "quartz.metrics.enable-job-gauges",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for gauge of fired jobs is enabled",
+    "defaultValue": "true"
+  },{
+    "name": "quartz.metrics.enable-trigger-gauges",
+    "type": "java.lang.Boolean",
+    "description": "if metrics for gauge of fired triggers is enabled",
+    "defaultValue": "true"
+  },{
     "name": "quartz.persistence.persisted",
     "type": "java.lang.Boolean",
     "description": "should be set to true if quartz is configured to persist its data to a database",
