@@ -127,6 +127,32 @@ For special configuration, please check the [additional-spring-configuration-met
   # quartz properties from quartz.properties-config-location.
   # If false only Springs quartz.properties.* will be used with fallback to file if empty.
   quartz.override-config-location-properties=true
+  
+  ################################
+  #      Spring Boot Actuator    #
+  ################################
+  
+  # Since 1.0.5
+  
+  
+  # if set to true the TriggerMetricsListener will be added to Quartz listeners 
+  # which requires a configured CounterService and GaugeService
+  quartz.metrics.enabled=false
+  
+  # listener name for Quartz. Default: class name
+  quartz.metrics.listener-name=
+  
+  quartz.metrics.enable-job-group-counter=false
+  
+  quartz.metrics.enable-job-counter=true
+  
+  quartz.metrics.enable-trigger-counter=true
+  
+  quartz.metrics.enable-execution-instruction-counter=false
+  
+  quartz.metrics.enable-job-gauges=true
+  
+  quartz.metrics.enable-trigger-gauges=true
 
 ```
 
@@ -134,8 +160,10 @@ The Property `quartz.properties.org.quartz.scheduler.instanceName` is overridden
 
 ## Additional Things
 
+### Utils
 Check `de.chandre.quartz.spring.QuartzUtils` for Builders for JobDetail, SimpleTrigger and CronTrigger
 
+### Hooks
 If you want to add scheduler properties at runtime while application start-up, you are able to do that by implementing the `de.chandre.quartz.spring.QuartzPropertiesOverrideHook` (Maybe if your Configuration is stored in a database, or you want to change the Quartz table prefix with Hibernate's common table prefix).
 
 If you want to customize the SchedulerFactory, e.g. to set own task executor, you are able to do that by implementing the `de.chandre.quartz.spring.QuartzSchedulerFactoryOverrideHook`
@@ -185,6 +213,83 @@ public class SchedulerConfig
 		};
 	}
 }
+```
+
+### Job interdependencies (With 1.0.5)
+Since 1.0.5 there are also predefined classes to queue dependent jobs. This implementation aims to jobs modifying same resources or should not run together at all.
+First defining the queue service
+
+```java
+	
+	@Bean(name="queueService")
+	public QueueService<Future<JobExecutionResult>> callbackQueueServiceImpl() {
+		//AsyncQueueServiceImpl or any own implemented service
+		return new CallbackQueueServiceImpl();
+	}
+
+```
+
+Afterwards within the job
+
+```java
+
+@Scope(scopeName=ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class CallbackQueuedJob implements Job, QueuedInstance
+{
+	private final Log LOGGER = LogFactory.getLog(CallbackQueuedJob.class);
+	
+	public static String GROUP = "myGroup";
+	
+	@Autowired
+	private QueueService<Future<JobExecutionResult>> queueService;
+	
+	private JobExecutionContext context = null;
+	
+	@Override
+	public String getGroup() {
+		return GROUP;
+	}
+	
+	@Override
+	public String getName() {
+		if (null != context) {
+			return context.getTrigger().getKey().getName();
+		}
+		return QueuedInstance.super.getName();
+	}
+	
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException{
+    	this.context = jobExecutionContext;
+    	Future<JobExecutionResult> future= queueService.queueMe(this);
+    	try {
+    		if (null != future) {
+    			JobExecutionResult jer = future.get(10000L, TimeUnit.MILLISECONDS);
+        		
+        		if (jer.getException() != null) {
+        			throw new JobExecutionException(jer.getException());
+        		}
+    		} else {
+    			LOGGER.info("job not added " + jobExecutionContext.getTrigger().getKey().getName());
+    		}
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			throw new JobExecutionException(e);
+		}
+	}
+
+	@Override
+	public boolean run() {
+		
+		//doing someing ... 
+		
+		/*
+		 * can use this.context because my job bean should be a prototype
+		 */
+		
+		return true;
+	}
+}
+
 ```
 
 ## Recommended Maven Dependency Management
