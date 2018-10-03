@@ -38,32 +38,32 @@
   },{
     "name": "quartz.metrics.enable-job-group-counter",
     "type": "java.lang.Boolean",
-    "description": "if metrics for counting fired job groups is enabled",
+    "description": "if metrics for counting fired job groups should be enabled",
     "defaultValue": "false"
   },{
     "name": "quartz.metrics.enable-job-counter",
     "type": "java.lang.Boolean",
-    "description": "if metrics for counting fired jobs is enabled",
+    "description": "if metrics for counting fired jobs should be enabled",
     "defaultValue": "true"
   },{
     "name": "quartz.metrics.enable-trigger-counter",
     "type": "java.lang.Boolean",
-    "description": "if metrics for counting fired triggers is enabled",
+    "description": "if metrics for counting fired triggers should be enabled",
     "defaultValue": "true"
   },{
     "name": "quartz.metrics.enable-execution-instruction-counter",
     "type": "java.lang.Boolean",
-    "description": "if metrics for final instructions per job/trigger is enabled",
+    "description": "if metrics for final instructions per job/trigger should be enabled",
     "defaultValue": "false"
   },{
     "name": "quartz.metrics.enable-job-gauges",
     "type": "java.lang.Boolean",
-    "description": "if metrics for gauge of fired jobs is enabled",
+    "description": "if metrics for gauge of fired jobs should be enabled",
     "defaultValue": "true"
   },{
     "name": "quartz.metrics.enable-trigger-gauges",
     "type": "java.lang.Boolean",
-    "description": "if metrics for gauge of fired triggers is enabled",
+    "description": "if metrics for gauge of fired triggers should be enabled",
     "defaultValue": "true"
   },{
     "name": "quartz.persistence.persisted",

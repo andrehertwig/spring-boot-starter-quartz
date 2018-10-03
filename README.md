@@ -132,8 +132,7 @@ For special configuration, please check the [additional-spring-configuration-met
   #      Spring Boot Actuator    #
   ################################
   
-  # Since 1.0.5
-  
+  # With 1.0.5
   
   # if set to true the TriggerMetricsListener will be added to Quartz listeners 
   # which requires a configured CounterService and GaugeService
@@ -142,16 +141,22 @@ For special configuration, please check the [additional-spring-configuration-met
   # listener name for Quartz. Default: class name
   quartz.metrics.listener-name=
   
+  # if metrics for counting fired job groups is enabled
   quartz.metrics.enable-job-group-counter=false
   
+  # if metrics for counting fired jobs should be enabled
   quartz.metrics.enable-job-counter=true
   
+  # if metrics for counting fired triggers should be enabled
   quartz.metrics.enable-trigger-counter=true
   
+  # if metrics for final instructions per job/trigger should be enabled
   quartz.metrics.enable-execution-instruction-counter=false
   
+  # if metrics for gauge of fired jobs should be enabled
   quartz.metrics.enable-job-gauges=true
   
+  # if metrics for gauge of fired triggers should be enabled
   quartz.metrics.enable-trigger-gauges=true
 
 ```
@@ -217,6 +222,7 @@ public class SchedulerConfig
 
 ### Job interdependencies (With 1.0.5)
 Since 1.0.5 there are also predefined classes to queue dependent jobs. This implementation aims to jobs modifying same resources or should not run together at all.
+
 First defining the queue service
 
 ```java
