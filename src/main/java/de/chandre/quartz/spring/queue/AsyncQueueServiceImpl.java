@@ -1,5 +1,6 @@
 package de.chandre.quartz.spring.queue;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
@@ -15,7 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The async queue service puts the job instance to a queue and and returns a boolean value.<br>
+ * The async queue service puts the {@link QueuedInstance} to a queue and and returns true if the {@link QueuedInstance} was added.<br>
  * Execution will happen afterwards.<br>
  * For Quartz the job may finished successfully and really fast. 
  * As alternative the {@link CallbackQueueServiceImpl} will return a result.
@@ -23,13 +24,13 @@ import org.apache.commons.logging.LogFactory;
  * @author André
  * @since 1.0.5
  */
-public class AsyncQueueServiceImpl implements QueueService<Boolean> {
+public class AsyncQueueServiceImpl extends AbstractQueueService<Boolean> {
 	
 	private static final Log LOG = LogFactory.getLog(AsyncQueueServiceImpl.class);
 	
 	private Map<String, Queue<QueuedInstance>> jobQueueMap = new ConcurrentHashMap<>();
 	
-	private ExecutorService scheduledExecutorService;
+	private ExecutorService executorService;
 	
 	private boolean multipleInstancesAllowed;
 	
@@ -42,7 +43,8 @@ public class AsyncQueueServiceImpl implements QueueService<Boolean> {
 	
 	/**
 	 * 
-	 * @param allowMultipleInstances to allow that more than instance to be queued with same name
+	 * @param allowMultipleInstances to configure if more than one {@link QueuedInstance} 
+	 * 	with same {@link QueuedInstance#getKey()} is allowed (true) ore not (false). 
 	 */
 	public AsyncQueueServiceImpl(boolean allowMultipleInstances) {
 		super();
@@ -56,17 +58,25 @@ public class AsyncQueueServiceImpl implements QueueService<Boolean> {
 	
 	@PreDestroy
 	public void destroy() {
-		scheduledExecutorService.shutdown();
+		shutdown();
 	}
 	
+	private void shutdown() {
+		super.shutdownExecutor(executorService, LOG);
+		this.executorService = null;
+		this.jobQueueMap.clear();
+	}
 	
 	@Override
 	public Boolean queueMe(QueuedInstance instance) {
-		LOG.debug("try queuing job " + instance.getName() + " with hash: "+ instance.hashCode());
+		LOG.debug("try queuing job "+ instance.getKey() + " with hash: "+ instance.hashCode());
 		Queue<QueuedInstance> jobQueue = jobQueueMap.get(instance.getGroup());
 		if (null == jobQueue) {
 			jobQueue = new ConcurrentLinkedQueue<QueuedInstance>();
-			jobQueueMap.put(instance.getGroup(), jobQueue);
+			Queue<QueuedInstance> otherJobQueue = jobQueueMap.putIfAbsent(instance.getGroup(), jobQueue);
+			if (null != otherJobQueue) {
+				jobQueue = otherJobQueue;
+			}
 		}
 		if (!multipleInstancesAllowed) {
 			Optional<QueuedInstance> queuedInstance = jobQueue.stream().filter(qi -> qi.getName().equals(instance.getName())).findFirst();
@@ -82,8 +92,8 @@ public class AsyncQueueServiceImpl implements QueueService<Boolean> {
 	}
 	
 	private void runQueue() {
-		scheduledExecutorService = Executors.newSingleThreadExecutor();
-		scheduledExecutorService.execute(new QueueTask(this));
+		executorService = Executors.newSingleThreadExecutor();
+		executorService.execute(new QueueTask(this));
 	}
 	
 	private static class QueueTask implements Runnable {
@@ -115,5 +125,15 @@ public class AsyncQueueServiceImpl implements QueueService<Boolean> {
 				});
 			}
 		}
+	}
+	
+	@Override
+	protected Collection<String> getGroupKeys() {
+		return this.jobQueueMap.keySet();
+	}
+	
+	public void reset() {
+		shutdown();
+		this.executorService = Executors.newSingleThreadExecutor();
 	}
 }

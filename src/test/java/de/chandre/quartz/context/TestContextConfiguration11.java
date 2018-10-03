@@ -74,7 +74,9 @@ public class TestContextConfiguration11 {
 	
 	@Bean(name="queueService")
 	public QueueService<Future<JobExecutionResult>> callbackQueueServiceImpl() {
-		return new CallbackQueueServiceImpl();
+		CallbackQueueServiceImpl cbqs = new CallbackQueueServiceImpl();
+		cbqs.setWaitForTerminationTime(1000L);
+		return cbqs;
 	}
 	
 	@Bean(name="callbackJobDetail")
@@ -84,20 +86,20 @@ public class TestContextConfiguration11 {
 	
 	@Bean(name = "callbackJobTrigger")
 	public SimpleTriggerFactoryBean createCallbackTrigger(@Qualifier("callbackJobDetail") JobDetail jobDetail) {
-		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger1").startDelay(0L)
-				.repeatInterval(1L).repeatCount(20).getTriggerFactoryBean();
+		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger1").startDelay(5L)
+				.repeatInterval(100L).repeatCount(20).getTriggerFactoryBean();
 	}
 	
 	@Bean(name = "callbackJobTrigger2")
 	public SimpleTriggerFactoryBean createCallbackTrigger2(@Qualifier("callbackJobDetail") JobDetail jobDetail) {
-		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger2").startDelay(0L)
-				.repeatInterval(1L).repeatCount(20).getTriggerFactoryBean();
+		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger2").startDelay(5L)
+				.repeatInterval(100L).repeatCount(20).getTriggerFactoryBean();
 	}
 	
 	@Bean(name = "callbackJobTrigger3")
 	public SimpleTriggerFactoryBean createCallbackTrigger3(@Qualifier("callbackJobDetail") JobDetail jobDetail) {
-		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger3").startDelay(0L)
-				.repeatInterval(1L).repeatCount(20).getTriggerFactoryBean();
+		return QuartzUtils.simpleTriggerBuilder().jobDetail(jobDetail).name("CallbackTrigger3").startDelay(5L)
+				.repeatInterval(100L).repeatCount(20).getTriggerFactoryBean();
 	}
 	
 }

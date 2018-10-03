@@ -26,7 +26,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import de.chandre.quartz.context.TestContextConfiguration11;
+import de.chandre.quartz.jobs.CallbackQueuedJob;
 import de.chandre.quartz.spring.app.TestApplication2;
+import de.chandre.quartz.spring.queue.QueueService;
+import de.chandre.quartz.spring.queue.QueuedInstance;
 
 /**
  * JMX test
@@ -62,6 +65,9 @@ public class QuartzSchedulerAutoConfig11Test {
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
 	
+	@Autowired
+	private QueueService queueService;
+	
 	@Test
 	public void startEnvironment_test() throws SchedulerException {
 		assertNotNull(scheduler);
@@ -83,6 +89,11 @@ public class QuartzSchedulerAutoConfig11Test {
 			
 			String domain = "quartz";
 			assertThat(domains).doesNotContain(domain);
+			
+			//wait a while until some jobs have been triggered
+			Thread.sleep(1000L);
+			
+			assertThat(queueService.getGroups()).containsOnlyOnce(QueuedInstance.DEFAULT_GROUP, CallbackQueuedJob.GROUP);
 			
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);

@@ -12,6 +12,7 @@ package de.chandre.quartz.spring.queue;
 public interface QueuedInstance {
 	
 	String DEFAULT_GROUP = "default";
+	String KEY_SEPARATOR = ":";
 	
 	/**
 	 * identification name of queue group.
@@ -27,6 +28,14 @@ public interface QueuedInstance {
 	 */
 	default String getName() {
 		return getClass().getSimpleName();
+	};
+	
+	/**
+	 * should return an identifier for the queued instance. 
+	 * @return default: {@link #getGroup()} + {@value #KEY_SEPARATOR} + {@link #getName())
+	 */
+	default String getKey() {
+		return getGroup() + KEY_SEPARATOR + getName();
 	};
 	
 	/**

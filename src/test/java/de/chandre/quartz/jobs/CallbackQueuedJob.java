@@ -26,12 +26,19 @@ import de.chandre.quartz.spring.queue.QueuedInstance;
 @Scope(scopeName=ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CallbackQueuedJob implements Job, QueuedInstance
 {
-	private static final Log LOGGER = LogFactory.getLog(CallbackQueuedJob.class);
+	private final Log LOGGER = LogFactory.getLog(CallbackQueuedJob.class);
+	
+	public static String GROUP = "myGroup";
 	
 	@Autowired
 	private QueueService<Future<JobExecutionResult>> queueService;
 	
 	private JobExecutionContext context = null;
+	
+	@Override
+	public String getGroup() {
+		return GROUP;
+	}
 	
 	@Override
 	public String getName() {
@@ -48,13 +55,18 @@ public class CallbackQueuedJob implements Job, QueuedInstance
     	Future<JobExecutionResult> future= queueService.queueMe(this);
     	
     	try {
-    		JobExecutionResult jer = future.get(10000L, TimeUnit.MILLISECONDS);
-    		
-    		if (jer.getException() != null) {
-    			throw new JobExecutionException(jer.getException());
+    		if (null != future) {
+    			JobExecutionResult jer = future.get(10000L, TimeUnit.MILLISECONDS);
+        		
+        		if (jer.getException() != null) {
+        			throw new JobExecutionException(jer.getException());
+        		} else {
+        			LOGGER.info("finished callback job with: " + jer.isSuccess() + " of job " + jobExecutionContext.getTrigger().getKey().getName());
+        		}
     		} else {
-    			LOGGER.info("finished callback job with: " + jer.isSuccess());
+    			LOGGER.info("job not added " + jobExecutionContext.getTrigger().getKey().getName());
     		}
+    		
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			throw new JobExecutionException(e);
 		}
