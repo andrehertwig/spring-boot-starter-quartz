@@ -29,7 +29,7 @@ public class QuartzUtils {
 	 * @return build wrapper for JobDetail
 	 */
 	public static QuartzJobBuilder jobBuilder() {
-	    return new QuartzJobBuilder();
+	    return QuartzJobBuilder.builder();
 	}
 	
 	/**
@@ -38,6 +38,10 @@ public class QuartzUtils {
 	 */
 	public static class QuartzJobBuilder {
 		private final JobDetailFactoryBean jobDetailFactoryBean;
+		
+		public static QuartzJobBuilder builder() {
+			return new QuartzJobBuilder();
+		}
 
 		public QuartzJobBuilder() {
 			jobDetailFactoryBean = new JobDetailFactoryBean();
@@ -201,7 +205,7 @@ public class QuartzUtils {
 	 * @return build wrapper for simple trigger 
 	 */
 	public static QuartzSimpleTriggerBuilder simpleTriggerBuilder() {
-	    return new QuartzSimpleTriggerBuilder();
+	    return QuartzSimpleTriggerBuilder.builder();
 	}
 	
 	/**
@@ -210,6 +214,10 @@ public class QuartzUtils {
 	 */
 	public static class QuartzSimpleTriggerBuilder {
 		private final SimpleTriggerFactoryBean triggerFactoryBean;
+		
+		public static QuartzSimpleTriggerBuilder builder() {
+			return new QuartzSimpleTriggerBuilder();
+		}
 		
 		public QuartzSimpleTriggerBuilder() {
 			triggerFactoryBean = new SimpleTriggerFactoryBean();
@@ -419,7 +427,7 @@ public class QuartzUtils {
 	 * @return build wrapper for cron trigger 
 	 */
 	public static QuartzCronTriggerBuilder cronTriggerBuilder() {
-	    return new QuartzCronTriggerBuilder();
+	    return QuartzCronTriggerBuilder.builder();
 	}
 	
 	/**
@@ -428,6 +436,10 @@ public class QuartzUtils {
 	 */
 	public static class QuartzCronTriggerBuilder {
 		private final CronTriggerFactoryBean triggerFactoryBean;
+		
+		public static QuartzCronTriggerBuilder builder() {
+			return new QuartzCronTriggerBuilder();
+		}
 		
 		public QuartzCronTriggerBuilder() {
 			triggerFactoryBean = new CronTriggerFactoryBean();
