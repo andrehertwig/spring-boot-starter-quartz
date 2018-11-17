@@ -24,7 +24,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 
 Tested with Spring Boot 
 * (until 1.0.2) 1.3.8, 1.4.6, 1.5.3, 1.5.6, 
-* (since 1.0.3) 1.4.6, 1.5.10, 1.5.16
+* (since 1.0.3) 1.4.6, 1.5.10, 1.5.16, 1.5.17
 
 ## Usage
 
