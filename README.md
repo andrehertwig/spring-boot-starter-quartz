@@ -16,9 +16,9 @@ This is just a spare-time project. The usage of this tool (especially in product
 2. [Usage](#usage)
 3. [Configuration Properties](#configuration-properties)
 4. [Additional Things](#additional-things)
-   1. [Utils] (#utils)
-   2. [Hooks] (#hooks)
-   3. [Job interdependencies] (#job-interdependencies-with-105)
+   1. [Utils](#utils)
+   2. [Hooks](#hooks)
+   3. [Job interdependencies](#job-interdependencies-with-105)
 5. [Recommended Maven Dependency Management](#recommended-maven-dependency-management)
 
 ## Requirements, Dependencies
