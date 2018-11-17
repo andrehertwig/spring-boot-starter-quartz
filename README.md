@@ -33,7 +33,7 @@ Tested with Spring Boot
 <dependency>
 	<groupId>de.chandre.quartz</groupId>
 	<artifactId>spring-boot-starter-quartz</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 </dependency>
 	
 ```
