@@ -56,7 +56,7 @@ public class MyBootApplication {
 
 For special configuration, please check the [additional-spring-configuration-metadata.json](src/main/resources/META-INF/additional-spring-configuration-metadata.json) 
 
-[Quartz 2.x Configuration](http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html)
+Original [Quartz 2.x Configuration](http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigMain.html) documentation. Please read this in case of questions how to configure Quartz correctly.
 
 ```ini
   # if auto configuration is enabled
@@ -230,11 +230,11 @@ First defining the queue service
 
 ```java
 	
-	@Bean(name="queueService")
-	public QueueService<Future<JobExecutionResult>> callbackQueueServiceImpl() {
-		//AsyncQueueServiceImpl or any own implemented service
-		return new CallbackQueueServiceImpl();
-	}
+@Bean(name="queueService")
+public QueueService<Future<JobExecutionResult>> callbackQueueServiceImpl() {
+	//AsyncQueueServiceImpl or any own implemented service
+	return new CallbackQueueServiceImpl();
+}
 
 ```
 
@@ -267,20 +267,20 @@ public class CallbackQueuedJob implements Job, QueuedInstance
 		return QueuedInstance.super.getName();
 	}
 	
-    @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException{
-    	this.context = jobExecutionContext;
-    	Future<JobExecutionResult> future= queueService.queueMe(this);
-    	try {
-    		if (null != future) {
-    			JobExecutionResult jer = future.get(10000L, TimeUnit.MILLISECONDS);
-        		
-        		if (jer.getException() != null) {
-        			throw new JobExecutionException(jer.getException());
-        		}
-    		} else {
-    			LOGGER.info("job not added " + jobExecutionContext.getTrigger().getKey().getName());
-    		}
+	@Override
+	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+		this.context = jobExecutionContext;
+		Future<JobExecutionResult> future= queueService.queueMe(this);
+		try {
+			if (null != future) {
+				JobExecutionResult jer = future.get(10000L, TimeUnit.MILLISECONDS);
+				if (jer.getException() != null) {
+					throw new JobExecutionException(jer.getException());
+				}
+				//do something else...
+			} else {
+				LOGGER.info("job not added " + jobExecutionContext.getTrigger().getKey().getName());
+			}
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			throw new JobExecutionException(e);
 		}
@@ -288,13 +288,10 @@ public class CallbackQueuedJob implements Job, QueuedInstance
 
 	@Override
 	public boolean run() {
-		
 		//doing someing ... 
-		
 		/*
 		 * can use this.context because my job bean should be a prototype
 		 */
-		
 		return true;
 	}
 }
