@@ -38,6 +38,9 @@ public class CallbackQueueServiceImpl extends AbstractQueueService<Future<JobExe
 	
 	private boolean multipleInstancesAllowed;
 	
+	/**
+	 * standard constructor which not allows multiple instances of objects with same  {@link QueuedInstance#getKey()}
+	 */
 	public CallbackQueueServiceImpl() {
 		this(false);
 	}
@@ -59,11 +62,20 @@ public class CallbackQueueServiceImpl extends AbstractQueueService<Future<JobExe
 	}
 	
 	private void shutdown() {
-		super.shutdownExecutor(defaultExecutorService, LOG);
+		
+		super.shutdownExecutor(defaultExecutorService, e -> logException(e));
 		this.defaultExecutorService = null;
-		this.jobQueueMap.values().stream().parallel().forEach(executor -> shutdownExecutor(executor, LOG));
+		this.jobQueueMap.values().stream().parallel().forEach(executor -> shutdownExecutor(executor, e -> logException(e)));
 		this.jobQueueMap.clear();
 		this.offeredInstances.clear();
+	}
+	
+	protected Void logException(Exception e) {
+		if (null != LOG) {
+			LOG.warn("ExecutorService didn't shut down within " + getWaitForTerminationTime() + " " + getWaitForTerminationUnit());
+			LOG.debug(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	@Override
@@ -99,6 +111,9 @@ public class CallbackQueueServiceImpl extends AbstractQueueService<Future<JobExe
 		return jobQueueMap.keySet();
 	}
 	
+	/**
+	 * terminates all internal executor services and creates a default new executor
+	 */
 	public void reset() {
 		shutdown();
 		this.defaultExecutorService = Executors.newSingleThreadExecutor();

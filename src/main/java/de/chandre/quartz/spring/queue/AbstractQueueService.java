@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import org.apache.commons.logging.Log;
 
@@ -73,7 +74,13 @@ public abstract class AbstractQueueService<T> implements QueueService<T> {
 		this.waitForTerminationUnit = waitForTerminationUnit;
 	}
 	
-	protected void shutdownExecutor(ExecutorService executorService, Log LOG) {
+	/**
+	 * shuts down the executor service waiting the configured time and catches possible exceptions
+	 * 
+	 * @param executorService
+	 * @param LOG the logger to log exceptions
+	 */
+	protected void shutdownExecutorLogging(ExecutorService executorService, Log LOG) {
 		executorService.shutdown();
 		try {
 			executorService.awaitTermination(getWaitForTerminationTime(), getWaitForTerminationUnit());
@@ -85,4 +92,23 @@ public abstract class AbstractQueueService<T> implements QueueService<T> {
 			executorService.shutdownNow();
 		}
 	}
+	
+	/**
+	 * shuts down the executor service waiting the configured time and catches possible exceptions. applys the function in case of exception
+	 * 
+	 * @param executorService
+	 * @param logException function with a Void return 
+	 */
+	protected void shutdownExecutor(ExecutorService executorService, Function<Exception, Void> logException) {
+		executorService.shutdown();
+		try {
+			executorService.awaitTermination(getWaitForTerminationTime(), getWaitForTerminationUnit());
+		} catch (InterruptedException e) {
+			if (null != logException) {
+				logException.apply(e);
+			}
+			executorService.shutdownNow();
+		}
+	}
+	
 }

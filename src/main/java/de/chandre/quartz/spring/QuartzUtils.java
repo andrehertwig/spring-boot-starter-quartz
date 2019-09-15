@@ -39,10 +39,16 @@ public class QuartzUtils {
 	public static class QuartzJobBuilder {
 		private final JobDetailFactoryBean jobDetailFactoryBean;
 		
+		/**
+		 * creates a job builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public static QuartzJobBuilder builder() {
 			return new QuartzJobBuilder();
 		}
 
+		/**
+		 * creates a job builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public QuartzJobBuilder() {
 			jobDetailFactoryBean = new JobDetailFactoryBean();
 		}
@@ -57,7 +63,7 @@ public class QuartzUtils {
 		}
 		/**
 		 * @see JobDetailFactoryBean#setBeanName(String)
-		 * @param name
+		 * @param beanName
 		 * @return
 		 */
 		public QuartzJobBuilder beanName(String beanName) {
@@ -215,10 +221,16 @@ public class QuartzUtils {
 	public static class QuartzSimpleTriggerBuilder {
 		private final SimpleTriggerFactoryBean triggerFactoryBean;
 		
+		/**
+		 * creates a simple trigger builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public static QuartzSimpleTriggerBuilder builder() {
 			return new QuartzSimpleTriggerBuilder();
 		}
 		
+		/**
+		 * creates a simple trigger builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public QuartzSimpleTriggerBuilder() {
 			triggerFactoryBean = new SimpleTriggerFactoryBean();
 		}
@@ -233,7 +245,7 @@ public class QuartzUtils {
 		}
 		/**
 		 * @see SimpleTriggerFactoryBean#setBeanName(String)
-		 * @param name
+		 * @param beanName
 		 * @return
 		 */
 		public QuartzSimpleTriggerBuilder beanName(String beanName) {
@@ -437,10 +449,16 @@ public class QuartzUtils {
 	public static class QuartzCronTriggerBuilder {
 		private final CronTriggerFactoryBean triggerFactoryBean;
 		
+		/**
+		 * creates a cron trigger builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public static QuartzCronTriggerBuilder builder() {
 			return new QuartzCronTriggerBuilder();
 		}
 		
+		/**
+		 * creates a cron trigger builder. you have to call {@link #build()} afterwards to get the object
+		 */
 		public QuartzCronTriggerBuilder() {
 			triggerFactoryBean = new CronTriggerFactoryBean();
 		}
@@ -456,7 +474,7 @@ public class QuartzUtils {
 		}
 		/**
 		 * @see CronTriggerFactoryBean#setBeanName(String)
-		 * @param name
+		 * @param beanName
 		 * @return
 		 */
 		public QuartzCronTriggerBuilder beanName(String beanName) {

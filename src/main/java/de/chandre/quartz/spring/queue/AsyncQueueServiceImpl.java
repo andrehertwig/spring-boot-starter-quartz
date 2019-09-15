@@ -62,9 +62,17 @@ public class AsyncQueueServiceImpl extends AbstractQueueService<Boolean> {
 	}
 	
 	private void shutdown() {
-		super.shutdownExecutor(executorService, LOG);
+		super.shutdownExecutor(executorService, e -> logException(e));
 		this.executorService = null;
 		this.jobQueueMap.clear();
+	}
+	
+	protected Void logException(Exception e) {
+		if (null != LOG) {
+			LOG.warn("ExecutorService didn't shut down within " + getWaitForTerminationTime() + " " + getWaitForTerminationUnit());
+			LOG.debug(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	@Override
